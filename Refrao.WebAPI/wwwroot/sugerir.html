@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sugerir música · Refrão!</title>
+    <meta name="description" content="Refrão! — Plataforma de Catálogo de Músicas Pop.">
+    <meta name="theme-color" content="#0f0a1a">
+    <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header id="topo"></header>
+    <main class="container">
+        <div class="cabecalho-pagina">
+            <span class="sobretitulo">faltou alguma?</span>
+            <h1>Sugerir uma música</h1>
+            <p>Conte qual música você quer ver no catálogo. Um administrador confere os dados e, se aprovar, ela entra no Refrão!.</p>
+        </div>
+        <div class="sugestoes-grade">
+            <section class="painel" style="padding:1.8rem">
+                <h2>Nova sugestão</h2>
+                <div class="aviso" id="mensagem"></div>
+                <form id="formSugestao" novalidate>
+                    <div class="campo">
+                        <label for="titulo">Título da música *</label>
+                        <input id="titulo" maxlength="150" required>
+                        <div class="erro-campo"></div>
+                    </div>
+                    <div class="campo">
+                        <label for="artista">Artista *</label>
+                        <input id="artista" maxlength="100" list="listaArtistas" required>
+                        <datalist id="listaArtistas"></datalist>
+                        <div class="erro-campo"></div>
+                    </div>
+                    <div class="campo">
+                        <label for="album">Álbum (opcional)</label>
+                        <input id="album" maxlength="150">
+                        <div class="erro-campo"></div>
+                    </div>
+                    <div class="campo">
+                        <label for="observacao">Por que ela merece entrar? (opcional)</label>
+                        <textarea id="observacao" maxlength="500"></textarea>
+                        <div class="erro-campo"></div>
+                    </div>
+                    <button class="botao" type="submit">Enviar sugestão</button>
+                </form>
+            </section>
+            <section>
+                <h2>Minhas sugestões</h2>
+                <div class="aviso erro" id="erroLista"></div>
+                <div class="lista-sugestoes" id="minhasSugestoes"><div class="carregando"></div></div>
+            </section>
+        </div>
+    </main>
+    <footer id="rodape"></footer>
+    <script src="js/api.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/validacao.js"></script>
+    <script src="js/sugerir.js"></script>
+</body>
+</html>

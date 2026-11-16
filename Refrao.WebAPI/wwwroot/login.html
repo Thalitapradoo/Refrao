@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar · Refrão!</title>
+    <meta name="description" content="Refrão! — Plataforma de Catálogo de Músicas Pop.">
+    <meta name="theme-color" content="#0f0a1a">
+    <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header id="topo"></header>
+    <main class="pagina-centro">
+        <section class="cartao-form painel">
+            <h1>Bem-vindo de volta</h1>
+            <p class="subtitulo">Entre na sua conta do <strong>Refrão!</strong></p>
+            <div class="aviso" id="mensagem"></div>
+            <form id="formLogin" novalidate>
+                <div class="campo">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" autocomplete="email" required>
+                    <div class="erro-campo"></div>
+                </div>
+                <div class="campo">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" autocomplete="current-password" required>
+                    <div class="erro-campo"></div>
+                </div>
+                <button class="botao" type="submit" style="width:100%">Entrar</button>
+            </form>
+            <p class="rodape-form">Ainda não tem conta? <a href="cadastro.html">Cadastre-se</a></p>
+        </section>
+    </main>
+    <footer id="rodape"></footer>
+    <script src="js/api.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/validacao.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>

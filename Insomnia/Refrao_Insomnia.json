@@ -1,0 +1,2561 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-11-16T18:30:00.000Z",
+  "__export_source": "insomnia.desktop.app:v8.6.1",
+  "resources": [
+    {
+      "_id": "wrk_refrao",
+      "_type": "workspace",
+      "parentId": null,
+      "name": "Refrão! API",
+      "scope": "collection",
+      "description": "Testes da API do Refrão! (rode a API com dotnet run antes)."
+    },
+    {
+      "_id": "env_refrao",
+      "_type": "environment",
+      "parentId": "wrk_refrao",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:5190/api",
+        "token_admin": "{% response 'body', 'req_login_admin', 'b64::JC50b2tlbg==::46b', 'when-expired', 3600 %}",
+        "token_usuario": "{% response 'body', 'req_login_usuario', 'b64::JC50b2tlbg==::46b', 'when-expired', 3600 %}",
+        "id_usuario_comum": 2,
+        "id_musica_teste": 26,
+        "id_artista_teste": 5,
+        "id_album_teste": 9,
+        "id_genero_teste": 6,
+        "id_comentario": 1,
+        "id_sugestao_aprovar": 1,
+        "id_sugestao_recusar": 2,
+        "id_sugestao_cancelar": 3
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "token_admin",
+          "token_usuario",
+          "id_usuario_comum",
+          "id_musica_teste",
+          "id_artista_teste",
+          "id_album_teste",
+          "id_genero_teste",
+          "id_comentario",
+          "id_sugestao_aprovar",
+          "id_sugestao_recusar",
+          "id_sugestao_cancelar"
+        ]
+      }
+    },
+    {
+      "_id": "f1",
+      "_type": "request_group",
+      "parentId": "wrk_refrao",
+      "name": "1. Autenticação",
+      "metaSortKey": -999
+    },
+    {
+      "_id": "req_login_admin",
+      "_type": "request",
+      "parentId": "f1",
+      "name": "Login ADMINISTRADOR (200)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Auth/login",
+      "description": "Rode primeiro. O token vai sozinho para token_admin.",
+      "metaSortKey": -998,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"admin@refrao.com\",\n  \"senha\": \"Refrao@2026\"\n}"
+      },
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_login_errado",
+      "_type": "request",
+      "parentId": "f1",
+      "name": "Login senha errada (401)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Auth/login",
+      "description": "",
+      "metaSortKey": -997,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"admin@refrao.com\",\n  \"senha\": \"errada123\"\n}"
+      },
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_login_invalido",
+      "_type": "request",
+      "parentId": "f1",
+      "name": "Login sem dados (400)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Auth/login",
+      "description": "",
+      "metaSortKey": -996,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"\",\n  \"senha\": \"\"\n}"
+      },
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_registrar",
+      "_type": "request",
+      "parentId": "f1",
+      "name": "Cadastro público - usuário comum (201)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Auth/registrar",
+      "description": "Rodar de novo dá 409 (e-mail repetido).",
+      "metaSortKey": -995,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Fã do Pop\",\n  \"email\": \"fa@refrao.com\",\n  \"senha\": \"Popstar@2026\",\n  \"confirmacaoSenha\": \"Popstar@2026\"\n}"
+      },
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_registrar_conf",
+      "_type": "request",
+      "parentId": "f1",
+      "name": "Cadastro com confirmação diferente (400)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Auth/registrar",
+      "description": "",
+      "metaSortKey": -994,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Teste\",\n  \"email\": \"teste@refrao.com\",\n  \"senha\": \"Popstar@2026\",\n  \"confirmacaoSenha\": \"outra-senha\"\n}"
+      },
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_registrar_dup",
+      "_type": "request",
+      "parentId": "f1",
+      "name": "Cadastro com e-mail repetido (409)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Auth/registrar",
+      "description": "",
+      "metaSortKey": -993,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Repetido\",\n  \"email\": \"admin@refrao.com\",\n  \"senha\": \"Popstar@2026\",\n  \"confirmacaoSenha\": \"Popstar@2026\"\n}"
+      },
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "req_login_usuario",
+      "_type": "request",
+      "parentId": "f1",
+      "name": "Login USUÁRIO COMUM (200)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Auth/login",
+      "description": "O token vai sozinho para token_usuario.",
+      "metaSortKey": -992,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"fa@refrao.com\",\n  \"senha\": \"Popstar@2026\"\n}"
+      },
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_perfil_admin",
+      "_type": "request",
+      "parentId": "f1",
+      "name": "Perfil autenticado - admin (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Auth/perfil",
+      "description": "",
+      "metaSortKey": -991,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_perfil_sem",
+      "_type": "request",
+      "parentId": "f1",
+      "name": "Perfil sem token (401)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Auth/perfil",
+      "description": "",
+      "metaSortKey": -990,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "f2",
+      "_type": "request_group",
+      "parentId": "wrk_refrao",
+      "name": "2. Músicas - consultas",
+      "metaSortKey": -989
+    },
+    {
+      "_id": "r_m_lista",
+      "_type": "request",
+      "parentId": "f2",
+      "name": "Listar músicas (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Musicas",
+      "description": "",
+      "metaSortKey": -988,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_m_pag",
+      "_type": "request",
+      "parentId": "f2",
+      "name": "Página 2 com 10 itens (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Musicas?pagina=2&tamanhoPagina=10",
+      "description": "",
+      "metaSortKey": -987,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_m_busca",
+      "_type": "request",
+      "parentId": "f2",
+      "name": "Pesquisar título ou artista 'taylor' (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Musicas?busca=taylor",
+      "description": "",
+      "metaSortKey": -986,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_m_titulo",
+      "_type": "request",
+      "parentId": "f2",
+      "name": "Pesquisar por título 'love' (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Musicas?titulo=love",
+      "description": "",
+      "metaSortKey": -985,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_m_artista",
+      "_type": "request",
+      "parentId": "f2",
+      "name": "Pesquisar por artista 'dua' (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Musicas?artista=dua",
+      "description": "",
+      "metaSortKey": -984,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_m_artid",
+      "_type": "request",
+      "parentId": "f2",
+      "name": "Músicas do artista 2 - Shawn Mendes (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Musicas?artistaId=2",
+      "description": "",
+      "metaSortKey": -983,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_m_gen",
+      "_type": "request",
+      "parentId": "f2",
+      "name": "Filtrar por gênero 3 - Synth-pop (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Musicas?generoId=3",
+      "description": "",
+      "metaSortKey": -982,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_m_id",
+      "_type": "request",
+      "parentId": "f2",
+      "name": "Detalhes da música 1 (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Musicas/1",
+      "description": "",
+      "metaSortKey": -981,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_m_404",
+      "_type": "request",
+      "parentId": "f2",
+      "name": "Música inexistente (404)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Musicas/9999",
+      "description": "",
+      "metaSortKey": -980,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_m_pinv",
+      "_type": "request",
+      "parentId": "f2",
+      "name": "Paginação inválida (400)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Musicas?pagina=0",
+      "description": "",
+      "metaSortKey": -979,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "f3",
+      "_type": "request_group",
+      "parentId": "wrk_refrao",
+      "name": "3. Músicas - CRUD (admin)",
+      "metaSortKey": -978
+    },
+    {
+      "_id": "r_m_post",
+      "_type": "request",
+      "parentId": "f3",
+      "name": "Cadastrar música (201)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Musicas",
+      "description": "Banco recém-criado: recebe o ID 26 (id_musica_teste).",
+      "metaSortKey": -977,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Música de Teste\",\n  \"artistaId\": 1,\n  \"albumId\": 1,\n  \"generoId\": 1,\n  \"duracao\": 200,\n  \"dataLancamento\": \"2015-11-13\",\n  \"capaUrl\": null,\n  \"descricao\": \"Criada pelo Insomnia.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_m_dup",
+      "_type": "request",
+      "parentId": "f3",
+      "name": "Cadastrar música duplicada (409)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Musicas",
+      "description": "",
+      "metaSortKey": -976,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Música de Teste\",\n  \"artistaId\": 1,\n  \"albumId\": 1,\n  \"generoId\": 1,\n  \"duracao\": 200,\n  \"dataLancamento\": \"2015-11-13\",\n  \"capaUrl\": null,\n  \"descricao\": \"Criada pelo Insomnia.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_m_sem_titulo",
+      "_type": "request",
+      "parentId": "f3",
+      "name": "Música sem título (400)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Musicas",
+      "description": "",
+      "metaSortKey": -975,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"\",\n  \"artistaId\": 1,\n  \"albumId\": 1,\n  \"generoId\": 1,\n  \"duracao\": 200,\n  \"dataLancamento\": \"2015-11-13\",\n  \"capaUrl\": null,\n  \"descricao\": \"Criada pelo Insomnia.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_m_sem_artista",
+      "_type": "request",
+      "parentId": "f3",
+      "name": "Música sem artista (400)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Musicas",
+      "description": "",
+      "metaSortKey": -974,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Outra\",\n  \"artistaId\": 0,\n  \"albumId\": 1,\n  \"generoId\": 1,\n  \"duracao\": 200,\n  \"dataLancamento\": \"2015-11-13\",\n  \"capaUrl\": null,\n  \"descricao\": \"Criada pelo Insomnia.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_m_duracao",
+      "_type": "request",
+      "parentId": "f3",
+      "name": "Duração inválida (400)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Musicas",
+      "description": "",
+      "metaSortKey": -973,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Outra\",\n  \"artistaId\": 1,\n  \"albumId\": 1,\n  \"generoId\": 1,\n  \"duracao\": 0,\n  \"dataLancamento\": \"2015-11-13\",\n  \"capaUrl\": null,\n  \"descricao\": \"Criada pelo Insomnia.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_m_art_inex",
+      "_type": "request",
+      "parentId": "f3",
+      "name": "Artista inexistente (400)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Musicas",
+      "description": "",
+      "metaSortKey": -972,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Outra\",\n  \"artistaId\": 999,\n  \"albumId\": null,\n  \"generoId\": 1,\n  \"duracao\": 200,\n  \"dataLancamento\": \"2015-11-13\",\n  \"capaUrl\": null,\n  \"descricao\": \"Criada pelo Insomnia.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_m_alb_outro",
+      "_type": "request",
+      "parentId": "f3",
+      "name": "Álbum de outro artista (400)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Musicas",
+      "description": "Álbum 7 é 1989 (Taylor Swift), música é do Justin Bieber.",
+      "metaSortKey": -971,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Outra\",\n  \"artistaId\": 1,\n  \"albumId\": 7,\n  \"generoId\": 1,\n  \"duracao\": 200,\n  \"dataLancamento\": \"2015-11-13\",\n  \"capaUrl\": null,\n  \"descricao\": \"Criada pelo Insomnia.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_m_gen_inex",
+      "_type": "request",
+      "parentId": "f3",
+      "name": "Gênero inexistente (400)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Musicas",
+      "description": "",
+      "metaSortKey": -970,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Outra\",\n  \"artistaId\": 1,\n  \"albumId\": 1,\n  \"generoId\": 999,\n  \"duracao\": 200,\n  \"dataLancamento\": \"2015-11-13\",\n  \"capaUrl\": null,\n  \"descricao\": \"Criada pelo Insomnia.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_m_sem_token",
+      "_type": "request",
+      "parentId": "f3",
+      "name": "Cadastrar sem token (401)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Musicas",
+      "description": "",
+      "metaSortKey": -969,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Música de Teste\",\n  \"artistaId\": 1,\n  \"albumId\": 1,\n  \"generoId\": 1,\n  \"duracao\": 200,\n  \"dataLancamento\": \"2015-11-13\",\n  \"capaUrl\": null,\n  \"descricao\": \"Criada pelo Insomnia.\"\n}"
+      },
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_m_comum",
+      "_type": "request",
+      "parentId": "f3",
+      "name": "Cadastrar como usuário comum (403)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Musicas",
+      "description": "",
+      "metaSortKey": -968,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Música de Teste\",\n  \"artistaId\": 1,\n  \"albumId\": 1,\n  \"generoId\": 1,\n  \"duracao\": 200,\n  \"dataLancamento\": \"2015-11-13\",\n  \"capaUrl\": null,\n  \"descricao\": \"Criada pelo Insomnia.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_m_put",
+      "_type": "request",
+      "parentId": "f3",
+      "name": "Atualizar música de teste (204)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Musicas/{{ _.id_musica_teste }}",
+      "description": "",
+      "metaSortKey": -967,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Música de Teste (editada)\",\n  \"artistaId\": 1,\n  \"albumId\": 1,\n  \"generoId\": 2,\n  \"duracao\": 215,\n  \"dataLancamento\": \"2015-11-13\",\n  \"capaUrl\": null,\n  \"descricao\": \"Criada pelo Insomnia.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_m_put_comum",
+      "_type": "request",
+      "parentId": "f3",
+      "name": "Atualizar como usuário comum (403)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Musicas/1",
+      "description": "",
+      "metaSortKey": -966,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Música de Teste\",\n  \"artistaId\": 1,\n  \"albumId\": 1,\n  \"generoId\": 1,\n  \"duracao\": 200,\n  \"dataLancamento\": \"2015-11-13\",\n  \"capaUrl\": null,\n  \"descricao\": \"Criada pelo Insomnia.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_m_put404",
+      "_type": "request",
+      "parentId": "f3",
+      "name": "Atualizar inexistente (404)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Musicas/9999",
+      "description": "",
+      "metaSortKey": -965,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Música de Teste\",\n  \"artistaId\": 1,\n  \"albumId\": 1,\n  \"generoId\": 1,\n  \"duracao\": 200,\n  \"dataLancamento\": \"2015-11-13\",\n  \"capaUrl\": null,\n  \"descricao\": \"Criada pelo Insomnia.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_m_del_comum",
+      "_type": "request",
+      "parentId": "f3",
+      "name": "Excluir como usuário comum (403)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/Musicas/1",
+      "description": "",
+      "metaSortKey": -964,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_m_del",
+      "_type": "request",
+      "parentId": "f3",
+      "name": "Excluir música de teste (204)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/Musicas/{{ _.id_musica_teste }}",
+      "description": "",
+      "metaSortKey": -963,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_m_del404",
+      "_type": "request",
+      "parentId": "f3",
+      "name": "Excluir de novo (404)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/Musicas/{{ _.id_musica_teste }}",
+      "description": "",
+      "metaSortKey": -962,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "f4",
+      "_type": "request_group",
+      "parentId": "wrk_refrao",
+      "name": "4. Artistas",
+      "metaSortKey": -961
+    },
+    {
+      "_id": "r_a_lista",
+      "_type": "request",
+      "parentId": "f4",
+      "name": "Listar artistas (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Artistas",
+      "description": "",
+      "metaSortKey": -960,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_a_id",
+      "_type": "request",
+      "parentId": "f4",
+      "name": "Artista 1 com álbuns e músicas (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Artistas/1",
+      "description": "",
+      "metaSortKey": -959,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_a_404",
+      "_type": "request",
+      "parentId": "f4",
+      "name": "Artista inexistente (404)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Artistas/9999",
+      "description": "",
+      "metaSortKey": -958,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_a_post",
+      "_type": "request",
+      "parentId": "f4",
+      "name": "Cadastrar artista (201)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Artistas",
+      "description": "Banco recém-criado: ID 5 (id_artista_teste).",
+      "metaSortKey": -957,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Artista de Teste\",\n  \"nacionalidade\": \"Brasileira\",\n  \"biografia\": \"Criado pelo Insomnia.\",\n  \"imagemUrl\": null\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_a_dup",
+      "_type": "request",
+      "parentId": "f4",
+      "name": "Artista duplicado (409)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Artistas",
+      "description": "",
+      "metaSortKey": -956,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Artista de Teste\",\n  \"nacionalidade\": \"Brasileira\",\n  \"biografia\": \"Criado pelo Insomnia.\",\n  \"imagemUrl\": null\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_a_inv",
+      "_type": "request",
+      "parentId": "f4",
+      "name": "Artista sem nome (400)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Artistas",
+      "description": "",
+      "metaSortKey": -955,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"\",\n  \"nacionalidade\": \"Brasileira\",\n  \"biografia\": \"Criado pelo Insomnia.\",\n  \"imagemUrl\": null\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_a_comum",
+      "_type": "request",
+      "parentId": "f4",
+      "name": "Cadastrar como usuário comum (403)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Artistas",
+      "description": "",
+      "metaSortKey": -954,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Artista de Teste\",\n  \"nacionalidade\": \"Brasileira\",\n  \"biografia\": \"Criado pelo Insomnia.\",\n  \"imagemUrl\": null\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_a_put",
+      "_type": "request",
+      "parentId": "f4",
+      "name": "Atualizar artista de teste (204)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Artistas/{{ _.id_artista_teste }}",
+      "description": "",
+      "metaSortKey": -953,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Artista de Teste (editado)\",\n  \"nacionalidade\": \"Brasileira\",\n  \"biografia\": \"Criado pelo Insomnia.\",\n  \"imagemUrl\": null\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_a_del_vinc",
+      "_type": "request",
+      "parentId": "f4",
+      "name": "Excluir artista com músicas (409)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/Artistas/1",
+      "description": "",
+      "metaSortKey": -952,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "f5",
+      "_type": "request_group",
+      "parentId": "wrk_refrao",
+      "name": "5. Álbuns",
+      "metaSortKey": -951
+    },
+    {
+      "_id": "r_al_lista",
+      "_type": "request",
+      "parentId": "f5",
+      "name": "Listar álbuns (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Albuns",
+      "description": "",
+      "metaSortKey": -950,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_al_art",
+      "_type": "request",
+      "parentId": "f5",
+      "name": "Álbuns do artista 4 - Taylor Swift (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Albuns?artistaId=4",
+      "description": "",
+      "metaSortKey": -949,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_al_id",
+      "_type": "request",
+      "parentId": "f5",
+      "name": "Álbum 1 (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Albuns/1",
+      "description": "",
+      "metaSortKey": -948,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_al_404",
+      "_type": "request",
+      "parentId": "f5",
+      "name": "Álbum inexistente (404)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Albuns/9999",
+      "description": "",
+      "metaSortKey": -947,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_al_post",
+      "_type": "request",
+      "parentId": "f5",
+      "name": "Cadastrar álbum do artista de teste (201)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Albuns",
+      "description": "Banco recém-criado: ID 9 (id_album_teste). Usa o artista 5 criado na pasta 4.",
+      "metaSortKey": -946,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Álbum de Teste\",\n  \"artistaId\": 5,\n  \"dataLancamento\": \"2025-05-10\",\n  \"capaUrl\": \"img/capas/padrao.svg\",\n  \"descricao\": \"Criado pelo Insomnia.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_al_dup",
+      "_type": "request",
+      "parentId": "f5",
+      "name": "Álbum duplicado (409)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Albuns",
+      "description": "",
+      "metaSortKey": -945,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Álbum de Teste\",\n  \"artistaId\": 5,\n  \"dataLancamento\": \"2025-05-10\",\n  \"capaUrl\": \"img/capas/padrao.svg\",\n  \"descricao\": \"Criado pelo Insomnia.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_al_art_inex",
+      "_type": "request",
+      "parentId": "f5",
+      "name": "Álbum com artista inexistente (400)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Albuns",
+      "description": "",
+      "metaSortKey": -944,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Outro\",\n  \"artistaId\": 999,\n  \"dataLancamento\": \"2025-05-10\",\n  \"capaUrl\": \"img/capas/padrao.svg\",\n  \"descricao\": \"Criado pelo Insomnia.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_al_comum",
+      "_type": "request",
+      "parentId": "f5",
+      "name": "Cadastrar como usuário comum (403)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Albuns",
+      "description": "",
+      "metaSortKey": -943,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Álbum de Teste\",\n  \"artistaId\": 5,\n  \"dataLancamento\": \"2025-05-10\",\n  \"capaUrl\": \"img/capas/padrao.svg\",\n  \"descricao\": \"Criado pelo Insomnia.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_al_put",
+      "_type": "request",
+      "parentId": "f5",
+      "name": "Atualizar álbum de teste (204)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Albuns/{{ _.id_album_teste }}",
+      "description": "",
+      "metaSortKey": -942,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Álbum de Teste (editado)\",\n  \"artistaId\": 5,\n  \"dataLancamento\": \"2025-05-10\",\n  \"capaUrl\": \"img/capas/padrao.svg\",\n  \"descricao\": \"Criado pelo Insomnia.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_al_del_vinc",
+      "_type": "request",
+      "parentId": "f5",
+      "name": "Excluir álbum com músicas (409)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/Albuns/1",
+      "description": "",
+      "metaSortKey": -941,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_al_del",
+      "_type": "request",
+      "parentId": "f5",
+      "name": "Excluir álbum de teste (204)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/Albuns/{{ _.id_album_teste }}",
+      "description": "",
+      "metaSortKey": -940,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_a_del",
+      "_type": "request",
+      "parentId": "f5",
+      "name": "Excluir artista de teste, agora sem álbuns (204)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/Artistas/{{ _.id_artista_teste }}",
+      "description": "",
+      "metaSortKey": -939,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "f6",
+      "_type": "request_group",
+      "parentId": "wrk_refrao",
+      "name": "6. Gêneros",
+      "metaSortKey": -938
+    },
+    {
+      "_id": "r_g_lista",
+      "_type": "request",
+      "parentId": "f6",
+      "name": "Listar gêneros (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Generos",
+      "description": "",
+      "metaSortKey": -937,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_g_id",
+      "_type": "request",
+      "parentId": "f6",
+      "name": "Gênero 1 (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Generos/1",
+      "description": "",
+      "metaSortKey": -936,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_g_post",
+      "_type": "request",
+      "parentId": "f6",
+      "name": "Cadastrar gênero (201)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Generos",
+      "description": "Banco recém-criado: ID 6 (id_genero_teste).",
+      "metaSortKey": -935,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"K-pop\",\n  \"descricao\": \"Pop sul-coreano.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_g_dup",
+      "_type": "request",
+      "parentId": "f6",
+      "name": "Gênero duplicado (409)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Generos",
+      "description": "",
+      "metaSortKey": -934,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Pop\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_g_comum",
+      "_type": "request",
+      "parentId": "f6",
+      "name": "Cadastrar como usuário comum (403)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Generos",
+      "description": "",
+      "metaSortKey": -933,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Rock\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_g_put",
+      "_type": "request",
+      "parentId": "f6",
+      "name": "Atualizar gênero de teste (204)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Generos/{{ _.id_genero_teste }}",
+      "description": "",
+      "metaSortKey": -932,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"K-pop\",\n  \"descricao\": \"Pop sul-coreano (editado).\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_g_del_vinc",
+      "_type": "request",
+      "parentId": "f6",
+      "name": "Excluir gênero com músicas (409)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/Generos/1",
+      "description": "",
+      "metaSortKey": -931,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_g_del",
+      "_type": "request",
+      "parentId": "f6",
+      "name": "Excluir gênero de teste (204)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/Generos/{{ _.id_genero_teste }}",
+      "description": "",
+      "metaSortKey": -930,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "f7",
+      "_type": "request_group",
+      "parentId": "wrk_refrao",
+      "name": "7. Usuários e permissões",
+      "metaSortKey": -929
+    },
+    {
+      "_id": "r_u_lista",
+      "_type": "request",
+      "parentId": "f7",
+      "name": "Listar usuários - admin (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Usuarios",
+      "description": "",
+      "metaSortKey": -928,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_u_lista_c",
+      "_type": "request",
+      "parentId": "f7",
+      "name": "Listar usuários - comum (403)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Usuarios",
+      "description": "",
+      "metaSortKey": -927,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_u_outro",
+      "_type": "request",
+      "parentId": "f7",
+      "name": "Comum consultando outro usuário (403)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Usuarios/1",
+      "description": "",
+      "metaSortKey": -926,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_u_proprio",
+      "_type": "request",
+      "parentId": "f7",
+      "name": "Comum consultando a si mesmo (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Usuarios/{{ _.id_usuario_comum }}",
+      "description": "",
+      "metaSortKey": -925,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_u_edit",
+      "_type": "request",
+      "parentId": "f7",
+      "name": "Comum edita o próprio nome (204)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Usuarios/{{ _.id_usuario_comum }}",
+      "description": "",
+      "metaSortKey": -924,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Fã do Pop (editado)\",\n  \"email\": \"fa@refrao.com\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_u_senha_errada",
+      "_type": "request",
+      "parentId": "f7",
+      "name": "Trocar senha com senha atual errada (400)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Usuarios/{{ _.id_usuario_comum }}",
+      "description": "",
+      "metaSortKey": -923,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Fã do Pop\",\n  \"email\": \"fa@refrao.com\",\n  \"senhaAtual\": \"errada123\",\n  \"novaSenha\": \"NovaSenha@2026\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_u_virar_admin",
+      "_type": "request",
+      "parentId": "f7",
+      "name": "Comum tenta virar administrador (403)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Usuarios/{{ _.id_usuario_comum }}",
+      "description": "",
+      "metaSortKey": -922,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Fã do Pop\",\n  \"email\": \"fa@refrao.com\",\n  \"perfil\": \"Administrador\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_u_edit_outro",
+      "_type": "request",
+      "parentId": "f7",
+      "name": "Comum tenta editar outro usuário (403)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Usuarios/1",
+      "description": "",
+      "metaSortKey": -921,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Hacker\",\n  \"email\": \"admin@refrao.com\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_u_post_comum",
+      "_type": "request",
+      "parentId": "f7",
+      "name": "Comum tenta cadastrar usuário (403)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Usuarios",
+      "description": "",
+      "metaSortKey": -920,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"X\",\n  \"email\": \"x@refrao.com\",\n  \"senha\": \"12345678\",\n  \"perfil\": \"Administrador\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_u_post_admin",
+      "_type": "request",
+      "parentId": "f7",
+      "name": "Admin cadastra outro administrador (201)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Usuarios",
+      "description": "",
+      "metaSortKey": -919,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Segundo Admin\",\n  \"email\": \"admin2@refrao.com\",\n  \"senha\": \"Admin@2026\",\n  \"perfil\": \"Administrador\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_u_del_si",
+      "_type": "request",
+      "parentId": "f7",
+      "name": "Admin tenta desativar a si mesmo (400)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/Usuarios/1",
+      "description": "",
+      "metaSortKey": -918,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_u_del_comum",
+      "_type": "request",
+      "parentId": "f7",
+      "name": "Comum tenta desativar alguém (403)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/Usuarios/1",
+      "description": "",
+      "metaSortKey": -917,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_u_del",
+      "_type": "request",
+      "parentId": "f7",
+      "name": "Admin desativa o usuário comum (204)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/Usuarios/{{ _.id_usuario_comum }}",
+      "description": "",
+      "metaSortKey": -916,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_u_login_des",
+      "_type": "request",
+      "parentId": "f7",
+      "name": "Login do usuário desativado (401)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Auth/login",
+      "description": "",
+      "metaSortKey": -915,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"fa@refrao.com\",\n  \"senha\": \"Popstar@2026\"\n}"
+      },
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_u_reativar",
+      "_type": "request",
+      "parentId": "f7",
+      "name": "Admin reativa o usuário comum (204)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Usuarios/{{ _.id_usuario_comum }}",
+      "description": "",
+      "metaSortKey": -914,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Fã do Pop\",\n  \"email\": \"fa@refrao.com\",\n  \"perfil\": \"Usuario\",\n  \"ativo\": true\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "f8",
+      "_type": "request_group",
+      "parentId": "wrk_refrao",
+      "name": "8. Dashboard",
+      "metaSortKey": -913
+    },
+    {
+      "_id": "r_d_admin",
+      "_type": "request",
+      "parentId": "f8",
+      "name": "Totais do painel - admin (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Dashboard",
+      "description": "",
+      "metaSortKey": -912,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_d_comum",
+      "_type": "request",
+      "parentId": "f8",
+      "name": "Totais do painel - comum (403)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Dashboard",
+      "description": "",
+      "metaSortKey": -911,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "f9",
+      "_type": "request_group",
+      "parentId": "wrk_refrao",
+      "name": "9. Refrão (minuto e letra)",
+      "metaSortKey": -910
+    },
+    {
+      "_id": "r_rf_ok",
+      "_type": "request",
+      "parentId": "f9",
+      "name": "Definir início do refrão e link da letra (204)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Musicas/24",
+      "description": "Troque 50 e o link pelos valores corretos da música, conferidos por você.",
+      "metaSortKey": -909,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Anti-Hero\",\n  \"artistaId\": 4,\n  \"albumId\": 8,\n  \"generoId\": 3,\n  \"duracao\": 200,\n  \"dataLancamento\": \"2022-10-21\",\n  \"capaUrl\": null,\n  \"descricao\": \"Primeiro single de Midnights, lançado junto com o álbum.\",\n  \"inicioRefrao\": 50,\n  \"linkLetra\": \"https://www.exemplo.com/letra\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_rf_ver",
+      "_type": "request",
+      "parentId": "f9",
+      "name": "Ver música com inicioRefrao e linkLetra (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Musicas/24",
+      "description": "",
+      "metaSortKey": -908,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_rf_maior",
+      "_type": "request",
+      "parentId": "f9",
+      "name": "Refrão depois do fim da música (400)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Musicas/24",
+      "description": "",
+      "metaSortKey": -907,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Anti-Hero\",\n  \"artistaId\": 4,\n  \"albumId\": 8,\n  \"generoId\": 3,\n  \"duracao\": 200,\n  \"dataLancamento\": \"2022-10-21\",\n  \"capaUrl\": null,\n  \"descricao\": \"Primeiro single de Midnights, lançado junto com o álbum.\",\n  \"inicioRefrao\": 500,\n  \"linkLetra\": null\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_rf_link",
+      "_type": "request",
+      "parentId": "f9",
+      "name": "Link da letra inválido (400)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Musicas/24",
+      "description": "",
+      "metaSortKey": -906,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Anti-Hero\",\n  \"artistaId\": 4,\n  \"albumId\": 8,\n  \"generoId\": 3,\n  \"duracao\": 200,\n  \"dataLancamento\": \"2022-10-21\",\n  \"capaUrl\": null,\n  \"descricao\": \"Primeiro single de Midnights, lançado junto com o álbum.\",\n  \"inicioRefrao\": null,\n  \"linkLetra\": \"letra.com\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_rf_limpar",
+      "_type": "request",
+      "parentId": "f9",
+      "name": "Limpar refrão e link (204)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Musicas/24",
+      "description": "",
+      "metaSortKey": -905,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Anti-Hero\",\n  \"artistaId\": 4,\n  \"albumId\": 8,\n  \"generoId\": 3,\n  \"duracao\": 200,\n  \"dataLancamento\": \"2022-10-21\",\n  \"capaUrl\": null,\n  \"descricao\": \"Primeiro single de Midnights, lançado junto com o álbum.\",\n  \"inicioRefrao\": null,\n  \"linkLetra\": null\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "f10",
+      "_type": "request_group",
+      "parentId": "wrk_refrao",
+      "name": "10. Comentários - por que esse refrão gruda",
+      "metaSortKey": -904
+    },
+    {
+      "_id": "r_c_lista",
+      "_type": "request",
+      "parentId": "f10",
+      "name": "Listar comentários da música 24 (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Comentarios?musicaId=24",
+      "description": "",
+      "metaSortKey": -903,
+      "headers": [],
+      "body": {},
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_c_sem_token",
+      "_type": "request",
+      "parentId": "f10",
+      "name": "Comentar sem login (401)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Comentarios",
+      "description": "",
+      "metaSortKey": -902,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"musicaId\": 24,\n  \"texto\": \"Gruda porque...\"\n}"
+      },
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_c_post",
+      "_type": "request",
+      "parentId": "f10",
+      "name": "Usuário comum comenta (201)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Comentarios",
+      "description": "Banco recém-criado: ID 1 (id_comentario).",
+      "metaSortKey": -901,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"musicaId\": 24,\n  \"texto\": \"O refrão é curto e repete a frase principal, impossível não cantar junto.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_c_dup",
+      "_type": "request",
+      "parentId": "f10",
+      "name": "Comentar de novo na mesma música (409)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Comentarios",
+      "description": "",
+      "metaSortKey": -900,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"musicaId\": 24,\n  \"texto\": \"Outro comentário\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_c_curto",
+      "_type": "request",
+      "parentId": "f10",
+      "name": "Comentário muito curto (400)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Comentarios",
+      "description": "",
+      "metaSortKey": -899,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"musicaId\": 1,\n  \"texto\": \"a\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_c_musica",
+      "_type": "request",
+      "parentId": "f10",
+      "name": "Comentar em música inexistente (400)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Comentarios",
+      "description": "",
+      "metaSortKey": -898,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"musicaId\": 9999,\n  \"texto\": \"Gruda demais\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_c_put",
+      "_type": "request",
+      "parentId": "f10",
+      "name": "Autor edita o comentário (204)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Comentarios/{{ _.id_comentario }}",
+      "description": "",
+      "metaSortKey": -897,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"texto\": \"Editado: a batida para e volta no refrão.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_c_put_admin",
+      "_type": "request",
+      "parentId": "f10",
+      "name": "Admin tenta editar comentário de outro (403)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Comentarios/{{ _.id_comentario }}",
+      "description": "",
+      "metaSortKey": -896,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"texto\": \"Mudei seu texto\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_c_admin_post",
+      "_type": "request",
+      "parentId": "f10",
+      "name": "Admin também pode comentar (201)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Comentarios",
+      "description": "",
+      "metaSortKey": -895,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"musicaId\": 24,\n  \"texto\": \"Comentário do administrador para teste.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_c_del_admin",
+      "_type": "request",
+      "parentId": "f10",
+      "name": "Admin apaga comentário de outro usuário (204)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/Comentarios/{{ _.id_comentario }}",
+      "description": "",
+      "metaSortKey": -894,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_c_del404",
+      "_type": "request",
+      "parentId": "f10",
+      "name": "Apagar comentário inexistente (404)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/Comentarios/{{ _.id_comentario }}",
+      "description": "",
+      "metaSortKey": -893,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "f11",
+      "_type": "request_group",
+      "parentId": "wrk_refrao",
+      "name": "11. Sugestões de músicas",
+      "metaSortKey": -892
+    },
+    {
+      "_id": "r_s_post1",
+      "_type": "request",
+      "parentId": "f11",
+      "name": "Usuário sugere música (201) - será aprovada",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Sugestoes",
+      "description": "Banco recém-criado: ID 1.",
+      "metaSortKey": -891,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Sugestão de Teste A\",\n  \"artistaNome\": \"Dua Lipa\",\n  \"albumNome\": \"Future Nostalgia\",\n  \"observacao\": \"Quero ela no catálogo!\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_s_post2",
+      "_type": "request",
+      "parentId": "f11",
+      "name": "Usuário sugere música (201) - será recusada",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Sugestoes",
+      "description": "ID 2.",
+      "metaSortKey": -890,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Sugestão de Teste B\",\n  \"artistaNome\": \"Artista Desconhecido\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_s_post3",
+      "_type": "request",
+      "parentId": "f11",
+      "name": "Usuário sugere música (201) - será cancelada",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Sugestoes",
+      "description": "ID 3.",
+      "metaSortKey": -889,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Sugestão de Teste C\",\n  \"artistaNome\": \"Shawn Mendes\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_s_inv",
+      "_type": "request",
+      "parentId": "f11",
+      "name": "Sugestão sem título (400)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Sugestoes",
+      "description": "",
+      "metaSortKey": -888,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"\",\n  \"artistaNome\": \"Dua Lipa\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_s_sem",
+      "_type": "request",
+      "parentId": "f11",
+      "name": "Sugerir sem login (401)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Sugestoes",
+      "description": "",
+      "metaSortKey": -887,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"X\",\n  \"artistaNome\": \"Y\"\n}"
+      },
+      "authentication": {},
+      "parameters": []
+    },
+    {
+      "_id": "r_s_minhas",
+      "_type": "request",
+      "parentId": "f11",
+      "name": "Minhas sugestões - usuário (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Sugestoes/minhas",
+      "description": "",
+      "metaSortKey": -886,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_s_lista_comum",
+      "_type": "request",
+      "parentId": "f11",
+      "name": "Listar todas - usuário comum (403)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Sugestoes",
+      "description": "",
+      "metaSortKey": -885,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_s_lista",
+      "_type": "request",
+      "parentId": "f11",
+      "name": "Listar pendentes - admin (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Sugestoes?status=Pendente",
+      "description": "",
+      "metaSortKey": -884,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_s_status",
+      "_type": "request",
+      "parentId": "f11",
+      "name": "Status inválido (400)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Sugestoes?status=Talvez",
+      "description": "",
+      "metaSortKey": -883,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_s_aprovar_comum",
+      "_type": "request",
+      "parentId": "f11",
+      "name": "Usuário comum tenta aprovar (403)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Sugestoes/{{ _.id_sugestao_aprovar }}/aprovar",
+      "description": "",
+      "metaSortKey": -882,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"musica\": {\n    \"titulo\": \"X\",\n    \"artistaId\": 3,\n    \"generoId\": 1,\n    \"duracao\": 200,\n    \"dataLancamento\": \"2020-03-27\"\n  }\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_s_aprovar",
+      "_type": "request",
+      "parentId": "f11",
+      "name": "Admin aprova (200) - a música entra no catálogo",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Sugestoes/{{ _.id_sugestao_aprovar }}/aprovar",
+      "description": "A resposta traz o musicaId da música criada.",
+      "metaSortKey": -881,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"musica\": {\n    \"titulo\": \"Sugestão de Teste A\",\n    \"artistaId\": 3,\n    \"albumId\": 6,\n    \"generoId\": 2,\n    \"duracao\": 200,\n    \"dataLancamento\": \"2020-03-27\",\n    \"capaUrl\": null,\n    \"descricao\": \"Música de teste vinda de uma sugestão.\",\n    \"inicioRefrao\": null,\n    \"linkLetra\": null\n  },\n  \"resposta\": \"Obrigado! Entrou no catálogo.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_s_aprovar_de_novo",
+      "_type": "request",
+      "parentId": "f11",
+      "name": "Aprovar de novo (409)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Sugestoes/{{ _.id_sugestao_aprovar }}/aprovar",
+      "description": "",
+      "metaSortKey": -880,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"musica\": {\n    \"titulo\": \"Outra\",\n    \"artistaId\": 3,\n    \"generoId\": 2,\n    \"duracao\": 200,\n    \"dataLancamento\": \"2020-03-27\"\n  }\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_s_recusar_vazio",
+      "_type": "request",
+      "parentId": "f11",
+      "name": "Recusar sem motivo (400)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Sugestoes/{{ _.id_sugestao_recusar }}/recusar",
+      "description": "",
+      "metaSortKey": -879,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"resposta\": \"\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_s_recusar",
+      "_type": "request",
+      "parentId": "f11",
+      "name": "Admin recusa com motivo (200)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Sugestoes/{{ _.id_sugestao_recusar }}/recusar",
+      "description": "",
+      "metaSortKey": -878,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"resposta\": \"Esse artista ainda não faz parte do catálogo.\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_admin }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_s_cancelar",
+      "_type": "request",
+      "parentId": "f11",
+      "name": "Usuário cancela a própria sugestão pendente (204)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/Sugestoes/{{ _.id_sugestao_cancelar }}",
+      "description": "",
+      "metaSortKey": -877,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_s_cancelar_resp",
+      "_type": "request",
+      "parentId": "f11",
+      "name": "Usuário tenta cancelar sugestão já respondida (409)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/Sugestoes/{{ _.id_sugestao_recusar }}",
+      "description": "",
+      "metaSortKey": -876,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    },
+    {
+      "_id": "r_s_minhas2",
+      "_type": "request",
+      "parentId": "f11",
+      "name": "Minhas sugestões com as respostas (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Sugestoes/minhas",
+      "description": "",
+      "metaSortKey": -875,
+      "headers": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_usuario }}",
+        "prefix": "Bearer"
+      },
+      "parameters": []
+    }
+  ]
+}

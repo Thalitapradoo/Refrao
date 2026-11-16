@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Início · Refrão!</title>
+    <meta name="description" content="Refrão! — Plataforma de Catálogo de Músicas Pop.">
+    <meta name="theme-color" content="#0f0a1a">
+    <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header id="topo"></header>
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div>
+                    <span class="sobretitulo"><span class="equalizador" aria-hidden="true"><span></span><span></span><span></span><span></span></span> catálogo pop</span>
+                    <h1>Cada música tem um <span class="texto-gradiente">refrão</span> que fica.</h1>
+                    <p class="lead">O Refrão! reúne músicas, álbuns e artistas do pop em um só lugar. Pesquise, filtre por gênero e descubra os detalhes de cada faixa.</p>
+                    <div class="acoes" id="acoesHero">
+                        <a href="catalogo.html" class="botao">Explorar o catálogo</a>
+                        <a href="cadastro.html" class="botao secundario" data-visitante>Criar conta</a>
+                        <a href="login.html" class="botao secundario" data-visitante>Entrar</a>
+                    </div>
+                    <div class="numeros" id="numeros"></div>
+                </div>
+                <div class="vinil" aria-hidden="true">
+                    <div class="disco"></div>
+                    <div class="capas" id="capasHero"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="secao">
+            <div class="container">
+                <div class="secao-topo">
+                    <div>
+                        <span class="sobretitulo">em alta</span>
+                        <h2>Destaques musicais</h2>
+                        <p>Uma seleção do catálogo a cada visita.</p>
+                    </div>
+                    <a href="catalogo.html" class="botao secundario pequeno">Ver todas</a>
+                </div>
+                <div class="aviso erro" id="erroHome"></div>
+                <div class="grade-musicas" id="destaques"><div class="carregando"></div></div>
+            </div>
+        </section>
+
+        <section class="secao">
+            <div class="container">
+                <div class="secao-topo">
+                    <div>
+                        <span class="sobretitulo">no palco</span>
+                        <h2>Artistas em destaque</h2>
+                    </div>
+                    <a href="artistas.html" class="botao secundario pequeno">Todos os artistas</a>
+                </div>
+                <div class="grade-artistas" id="artistasDestaque"><div class="carregando"></div></div>
+            </div>
+        </section>
+    </main>
+    <footer id="rodape"></footer>
+    <script src="js/api.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/home.js"></script>
+</body>
+</html>

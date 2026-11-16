@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["build", "${workspaceFolder}/Refrao.WebAPI/Refrao.WebAPI.csproj"],
+      "problemMatcher": "$msCompile",
+      "group": { "kind": "build", "isDefault": true }
+    },
+    {
+      "label": "run (dotnet run)",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["run", "--project", "${workspaceFolder}/Refrao.WebAPI/Refrao.WebAPI.csproj", "--launch-profile", "http"],
+      "problemMatcher": "$msCompile",
+      "isBackground": true
+    }
+  ]
+}
